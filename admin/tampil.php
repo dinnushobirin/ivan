@@ -99,7 +99,7 @@ else{
             <li><a href="tampil.php?menu=pengerajin"><i class="fa fa-circle-o text-red"></i> <span>SET Pengerajin</span></a></li>
             <li><a href="tampil.php?menu=kategori"><i class="fa fa-circle-o text-red"></i> <span>SET Kategori</span></a></li>
             <li><a href="tampil.php?menu=kerajinan"><i class="fa fa-circle-o text-red"></i> <span>SET Kerajinan</span></a></li>
-            <li><a href="tampil.php?menu=buku_tamuc"><i class="fa fa-circle-o text-red"></i> <span>Buku Tamu </span></a></li>
+            <li><a href="tampil.php?menu=buku_tamucas"><i class="fa fa-circle-o text-red"></i> <span>Buku Tamu </span></a></li>
             
             
 			
