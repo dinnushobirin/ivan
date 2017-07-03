@@ -49,7 +49,7 @@
                     <input type="text" class="form-control" id="admin_name" name="admin_name" value="<?php echo $tampil1['admin_name']; ?>" placeholder="Enter Password..." required="">
                 </div><!-- /.form-group -->
 		<div class="form-group">
-                    <label>Email</label>
+                    <label>Email sdfs</label>
                     <input type="email" class="form-control" id="admin_email" name="admin_email" value="<?php echo $tampil1['admin_email']; ?>" placeholder="Enter Password..." required="">
                 </div><!-- /.form-group -->
 		<div class="form-group">
