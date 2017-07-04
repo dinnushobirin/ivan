@@ -24,9 +24,14 @@ elseif($_GET['menu']=="admin" ){
   	include "menu/menu_admin.php";		
   }
 
-// Bagian Menu guru
-elseif($_GET['menu']=="guru" ){
-  	include "menu/menu_guru.php";		
+// Bagian Menu kecamatan
+elseif($_GET['menu']=="kecamatan" ){
+  	include "menu/menu_kecamatan.php";		
+  }
+  
+// Bagian Menu kategori
+elseif($_GET['menu']=="kategori" ){
+  	include "menu/menu_kategori.php";		
   }
   
   // Bagian Menu siswa

@@ -26,17 +26,12 @@ if(empty($_SESSION['admin']) AND $_GET['menu']!="lupa_password"){
 if (isset($menu) AND $_GET['act']=='hapus'){
 	//untuk menghapus data admin
 	if($menu=="admin"){
-		$hapus=mysql_query("DELETE FROM admin WHERE id_admin='$_GET[id]'");
+		$hapus=mysql_query("DELETE FROM admin WHERE admin_id='$_GET[id]'");
   	}
 	
-	//untuk menghapus data guru
-	elseif($menu=="guru"){		
-		$hapus=mysql_query("DELETE FROM guru WHERE nip='$_GET[id]'");
-  	}
-	
-	//untuk menghapus data siswa
-	elseif($menu=="siswa"){		
-		$ambil=mysql_query("SELECT * FROM nilai WHERE nis='$_GET[id]'");
+        //untuk menghapus data kecamatan
+	elseif($menu=="kecamatan"){		
+		$ambil=mysql_query("SELECT * FROM kelurahan WHERE kelurahan_kecamatan_id='$_GET[id]'");
 		$hitung=mysql_num_rows($ambil);
 		
 		if(!empty($hitung)){
@@ -46,23 +41,26 @@ if (isset($menu) AND $_GET['act']=='hapus'){
 		}
 		
 		
-		$hapus=mysql_query("DELETE FROM siswa WHERE nis='$_GET[id]'");
+		$hapus=mysql_query("DELETE FROM kecamatan WHERE kecamatan_id='$_GET[id]'");
   	}
+        
+        //untuk menghapus data kategori
+	elseif($menu=="kategori"){		
+		$ambil=mysql_query("SELECT * FROM kerajinan WHERE kerajinan_kategori_id='$_GET[id]'");
+		$hitung=mysql_num_rows($ambil);
+		
+		if(!empty($hitung)){
+			 echo "<script>alert('HAPUS GAGAL')</script>";
+			 echo "<meta http-equiv='refresh'content='0;url=tampil.php?menu=$menu'>";
+			 exit;
+		}
+		
+		
+		$hapus=mysql_query("DELETE FROM kategori WHERE kategori_id='$_GET[id]'");
+  	}
+        
+		
 	
-	//untuk menghapus data kelas
-	elseif($menu=="kelas"){		
-		$hapus=mysql_query("DELETE FROM kelas WHERE id_kelas='$_GET[id]'");
-  	}
-	
-	//untuk menghapus data semester tahun
-	elseif($menu=="semester_tahun"){
-		$hapus=mysql_query("DELETE FROM semester_tahun WHERE id_semester_tahun='$_GET[id]'");
-  	}
-	
-	//untuk menghapus data mapel
-	elseif($menu=="mapel"){
-		$hapus=mysql_query("DELETE FROM mapel WHERE id_mapel='$_GET[id]'");
-  	}
 	
   
   if (!$hapus){
@@ -211,6 +209,130 @@ elseif ($menu=='admin' ){
 	
 }												
 //end untuk menu admin
+
+	   	                                                        //bagian kecamatan
+//untuk menu kecamatan
+elseif ($menu=='kecamatan' ){
+	//penulisan variabel2 yg dikirim
+	$id_admin			= strip_tags($_POST['kecamatan_id']);
+	$kecamatan_nama			= strip_tags($_POST['kecamatan_nama']);
+	$kecamatan_nama1		= strip_tags($_POST['kecamatan_nama1']);
+	$kecamatan_info			= strip_tags($_POST['kecamatan_info']);
+	
+	
+																	//untuk insert tabel bank
+	//untuk insert tabel bank
+	if($_GET['act']=="tambah"){
+		
+		validasi_ada("kecamatan","kecamatan_nama","$kecamatan_nama"); //validasi_ada($tabel,$validasi,$isi)
+		//sql input database
+		  $input = mysql_query("INSERT INTO kecamatan (
+                                                            kecamatan_nama,
+                                                            kecamatan_info)
+                                            VALUES (
+                                                            '$kecamatan_nama',
+                                                            '$kecamatan_info'
+                                                            )");
+		if (! $input){
+			echo mysql_error();
+			echo "<script>alert('Penyimpanan Data gagal dilaksanakan. ')</script>";
+			echo "<script language=javascript>window.history.go(-1);</script>";
+		}
+		else{
+			echo "<script>alert('Penyimpanan Data berhasil dilaksanakan.')</script>";
+		}
+		
+		echo "<meta http-equiv='refresh'content='0;url=tampil.php?menu=$menu'>";
+	}
+																	//untuk edit tabel member
+	elseif($_GET['act']=="edit"){
+		if($kecamatan_nama!==$kecamatan_nama1){
+			validasi_ada("kecamatan","kecamatan_nama","$kecamatan_nama"); //validasi_ada($tabel,$validasi,$isi)
+		}
+		
+		$update = mysql_query("UPDATE kecamatan SET 
+                                                    kecamatan_nama		='$kecamatan_nama',
+                                                    kecamatan_info		='$kecamatan_info'
+                                            WHERE kecamatan_id			='$kecamatan_id'");
+		
+    
+		
+		if (! $update){
+			echo mysql_error();
+			echo "<script>alert('Penyimpanan Data gagal dilaksanakan. ')</script>";
+			echo "<script language=javascript>window.history.go(-1);</script>";
+		}
+		else{
+			echo "<script>alert('Penyimpanan Data berhasil dilaksanakan. ')</script>";
+		}
+		echo "<meta http-equiv='refresh'content='0;url=tampil.php?menu=$menu'>";
+		
+	}
+	
+}												
+//end untuk menu kecamatan
+
+	   	                                                        //bagian kategori
+//untuk menu kategori
+elseif ($menu=='kategori' ){
+	//penulisan variabel2 yg dikirim
+	$kategori_id			= strip_tags($_POST['kategori_id']);
+	$kategori_name			= strip_tags($_POST['kategori_name']);
+	$kategori_name1 		= strip_tags($_POST['kategori_name1']);
+	$kategori_info			= strip_tags($_POST['kategori_info']);
+	
+	
+																	//untuk insert tabel bank
+	//untuk insert tabel bank
+	if($_GET['act']=="tambah"){
+		
+		validasi_ada("kategori","kategori_name","$kategori_name"); //validasi_ada($tabel,$validasi,$isi)
+		//sql input database
+		  $input = mysql_query("INSERT INTO kategori (
+                                                            kategori_name,
+                                                            kategori_info)
+                                            VALUES (
+                                                            '$kategori_name',
+                                                            '$kategori_info'
+                                                            )");
+		if (! $input){
+			echo mysql_error();
+			echo "<script>alert('Penyimpanan Data gagal dilaksanakan. ')</script>";
+			echo "<script language=javascript>window.history.go(-1);</script>";
+		}
+		else{
+			echo "<script>alert('Penyimpanan Data berhasil dilaksanakan.')</script>";
+		}
+		
+		echo "<meta http-equiv='refresh'content='0;url=tampil.php?menu=$menu'>";
+	}
+																	//untuk edit tabel member
+	elseif($_GET['act']=="edit"){
+		if($kategori_name!==$kategori_name1){
+			validasi_ada("kategori","kategori_name","$kategori_name"); //validasi_ada($tabel,$validasi,$isi)
+		}
+		
+		$update = mysql_query("UPDATE kategori SET 
+                                                    kategori_name		='$kategori_name',
+                                                    kategori_info		='$kategori_info'
+                                            WHERE kategori_id			='$kategori_id'");
+		
+    
+		
+		if (! $update){
+			echo mysql_error();
+			echo "<script>alert('Penyimpanan Data gagal dilaksanakan. ')</script>";
+			echo "<script language=javascript>window.history.go(-1);</script>";
+		}
+		else{
+			echo "<script>alert('Penyimpanan Data berhasil dilaksanakan. ')</script>";
+		}
+		echo "<meta http-equiv='refresh'content='0;url=tampil.php?menu=$menu'>";
+		
+	}
+	
+}												
+//end untuk menu kategori
 
 	   	                                                        //bagian guru
 //untuk menu guru
