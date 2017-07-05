@@ -29,6 +29,11 @@ if (isset($menu) AND $_GET['act']=='hapus'){
 		$hapus=mysql_query("DELETE FROM admin WHERE admin_id='$_GET[id]'");
   	}
 	
+        //untuk menghapus data kelurahan
+	if($menu=="kelurahan"){
+		$hapus=mysql_query("DELETE FROM kelurahan WHERE kelurahan_id='$_GET[id]'");
+  	}
+        
         //untuk menghapus data kecamatan
 	elseif($menu=="kecamatan"){		
 		$ambil=mysql_query("SELECT * FROM kelurahan WHERE kelurahan_kecamatan_id='$_GET[id]'");
@@ -59,6 +64,20 @@ if (isset($menu) AND $_GET['act']=='hapus'){
 		$hapus=mysql_query("DELETE FROM kategori WHERE kategori_id='$_GET[id]'");
   	}
         
+        //untuk menghapus data pengerajin
+	elseif($menu=="pengerajin"){		
+		$ambil=mysql_query("SELECT * FROM kerajinan WHERE kerajinan_pengerajin_id='$_GET[id]'");
+		$hitung=mysql_num_rows($ambil);
+		
+		if(!empty($hitung)){
+			 echo "<script>alert('HAPUS GAGAL')</script>";
+			 echo "<meta http-equiv='refresh'content='0;url=tampil.php?menu=$menu'>";
+			 exit;
+		}
+		
+		
+		$hapus=mysql_query("DELETE FROM pengerajin WHERE pengerajin_id='$_GET[id]'");
+  	}
 		
 	
 	
@@ -214,7 +233,7 @@ elseif ($menu=='admin' ){
 //untuk menu kecamatan
 elseif ($menu=='kecamatan' ){
 	//penulisan variabel2 yg dikirim
-	$id_admin			= strip_tags($_POST['kecamatan_id']);
+	$kecamatan_id			= strip_tags($_POST['kecamatan_id']);
 	$kecamatan_nama			= strip_tags($_POST['kecamatan_nama']);
 	$kecamatan_nama1		= strip_tags($_POST['kecamatan_nama1']);
 	$kecamatan_info			= strip_tags($_POST['kecamatan_info']);
@@ -271,6 +290,73 @@ elseif ($menu=='kecamatan' ){
 	
 }												
 //end untuk menu kecamatan
+
+
+	   	                                                        //bagian kelurahan
+//untuk menu kelurahan
+elseif ($menu=='kelurahan' ){
+	//penulisan variabel2 yg dikirim
+	$kelurahan_id			= strip_tags($_POST['kelurahan_id']);
+	$kelurahan_kecamatan_id		= strip_tags($_POST['kelurahan_kecamatan_id']);
+	$kelurahan_nama			= strip_tags($_POST['kelurahan_nama']);
+	$kelurahan_nama1		= strip_tags($_POST['kelurahan_nama1']);
+	$kelurahan_info			= strip_tags($_POST['kelurahan_info']);
+	
+	
+																	//untuk insert tabel bank
+	//untuk insert tabel bank
+	if($_GET['act']=="tambah"){
+		
+		validasi_ada("kelurahan","kelurahan_nama","$kelurahan_nama"); //validasi_ada($tabel,$validasi,$isi)
+		//sql input database
+		  $input = mysql_query("INSERT INTO kelurahan (
+                                                            kelurahan_kecamatan_id,
+                                                            kelurahan_nama,
+                                                            kelurahan_info)
+                                            VALUES (
+                                                            '$kelurahan_kecamatan_id',
+                                                            '$kelurahan_nama',
+                                                            '$kelurahan_info'
+                                                            )");
+		if (! $input){
+			echo mysql_error();
+			echo "<script>alert('Penyimpanan Data gagal dilaksanakan. ')</script>";
+			echo "<script language=javascript>window.history.go(-1);</script>";
+		}
+		else{
+			echo "<script>alert('Penyimpanan Data berhasil dilaksanakan.')</script>";
+		}
+		
+		echo "<meta http-equiv='refresh'content='0;url=tampil.php?menu=$menu'>";
+	}
+																	//untuk edit tabel member
+	elseif($_GET['act']=="edit"){
+		if($kelurahan_nama!==$kelurahan_nama1){
+			validasi_ada("kelurahan","kelurahan_nama","$kelurahan_nama"); //validasi_ada($tabel,$validasi,$isi)
+		}
+		
+		$update = mysql_query("UPDATE kelurahan SET 
+                                                    kelurahan_kecamatan_id	='$kelurahan_kecamatan_id',
+                                                    kelurahan_nama		='$kelurahan_nama',
+                                                    kelurahan_info		='$kelurahan_info'
+                                            WHERE kelurahan_id			='$kelurahan_id'");
+		
+    
+		
+		if (! $update){
+			echo mysql_error();
+			echo "<script>alert('Penyimpanan Data gagal dilaksanakan. ')</script>";
+			echo "<script language=javascript>window.history.go(-1);</script>";
+		}
+		else{
+			echo "<script>alert('Penyimpanan Data berhasil dilaksanakan. ')</script>";
+		}
+		echo "<meta http-equiv='refresh'content='0;url=tampil.php?menu=$menu'>";
+		
+	}
+	
+}												
+//end untuk menu kelurahan
 
 	   	                                                        //bagian kategori
 //untuk menu kategori
@@ -334,6 +420,103 @@ elseif ($menu=='kategori' ){
 }												
 //end untuk menu kategori
 
+	   	                                                        //bagian pengerajin
+//untuk menu pengerajin
+elseif ($menu=='pengerajin' ){
+	//penulisan variabel2 yg dikirim
+	$pengerajin_id			= strip_tags($_POST['pengerajin_id']);
+	$pengerajin_kelurahan_id	= strip_tags($_POST['pengerajin_kelurahan_id']);
+	$pengerajin_nama		= strip_tags($_POST['pengerajin_nama']);
+	$pengerajin_nama1		= strip_tags($_POST['pengerajin_nama1']);
+	$pengerajin_alamat		= strip_tags($_POST['pengerajin_alamat']);
+	$pengerajin_info		= strip_tags($_POST['pengerajin_info']);
+	
+        $ambilIdKecamatan=mysql_query("SELECT kelurahan_kecamatan_id FROM kelurahan WHERE kelurahan_id = '$pengerajin_kelurahan_id' LIMIT 1");
+        $tampilIdKecamatan=  mysql_fetch_array($ambilIdKecamatan);
+        $kecamatan_id = $tampilIdKecamatan['kelurahan_kecamatan_id'];
+	
+        define("UPLOAD_DIR", "../images/images_pengerajin/");
+																	//untuk insert tabel bank
+	//untuk insert tabel bank
+	if($_GET['act']=="tambah"){
+		
+		validasi_ada("pengerajin","kelurahan_nama","$kelurahan_nama"); //validasi_ada($tabel,$validasi,$isi)
+                
+                $menu_id = $menu.'_id';
+                $ambilId=mysql_query("SELECT $menu_id FROM $menu ORDER BY $menu_id DESC LIMIT 1");
+		$tampilId=  mysql_fetch_array($ambilId);
+                $id = $tampilId[$menu.'_id']+1;
+                
+                gambar_upload(UPLOAD_DIR ,"$id","pengerajin"); //gambar_upload($lokasi, $id, $nama)
+		//sql input database
+		  $input = mysql_query("INSERT INTO pengerajin (
+                                                            pengerajin_id,
+                                                            pengerajin_kelurahan_id,
+                                                            pengerajin_kecamatan_id,
+                                                            pengerajin_nama,
+                                                            pengerajin_alamat,
+                                                            pengerajin_info,
+                                                            pengerajin_foto)
+                                            VALUES (
+                                                            '$id',
+                                                            '$pengerajin_kelurahan_id',
+                                                            '$kecamatan_id',
+                                                            '$pengerajin_nama',
+                                                            '$pengerajin_alamat',
+                                                            '$pengerajin_info',
+                                                            'pengerajin_$id.jpg'
+                                                            )");
+		if (! $input){
+			echo mysql_error();
+			echo "<script>alert('Penyimpanan Data gagal dilaksanakan. ')</script>";
+			echo "<script language=javascript>window.history.go(-1);</script>";
+		}
+		else{
+			echo "<script>alert('Penyimpanan Data berhasil dilaksanakan.')</script>";
+		}
+		
+		echo "<meta http-equiv='refresh'content='0;url=tampil.php?menu=$menu'>";
+	}
+																	//untuk edit tabel member
+	elseif($_GET['act']=="edit"){
+		if($kelurahan_nama!==$kelurahan_nama1){
+			validasi_ada("kelurahan","kelurahan_nama","$kelurahan_nama"); //validasi_ada($tabel,$validasi,$isi)
+		}
+                
+                if (!empty($_FILES['myFile']['name'])) {
+			gambar_upload(UPLOAD_DIR ,"$pengerajin_id","pengerajin");
+			$foto = ",pengerajin_foto		='pengerajin_$pengerajin_id.jpg'";
+		}
+		else{
+			$foto = "";
+		}
+		
+		$update = mysql_query("UPDATE pengerajin SET 
+                                                    pengerajin_kelurahan_id	='$pengerajin_kelurahan_id',
+                                                    pengerajin_kecamatan_id	='$kecamatan_id',
+                                                    pengerajin_nama		='$pengerajin_nama',
+                                                    pengerajin_alamat		='$pengerajin_alamat',
+                                                    pengerajin_info		='$pengerajin_info'
+                                                    $foto
+                                            WHERE pengerajin_id			='$pengerajin_id'");
+		
+    
+		
+		if (! $update){
+			echo mysql_error();
+			echo "<script>alert('Penyimpanan Data gagal dilaksanakan. ')</script>";
+			echo "<script language=javascript>window.history.go(-1);</script>";
+		}
+		else{
+			echo "<script>alert('Penyimpanan Data berhasil dilaksanakan. ')</script>";
+		}
+		echo "<meta http-equiv='refresh'content='0;url=tampil.php?menu=$menu'>";
+		
+	}
+	
+}												
+//end untuk menu pengerajin
+
 	   	                                                        //bagian guru
 //untuk menu guru
 elseif ($menu=='guru' ){
@@ -359,7 +542,7 @@ elseif ($menu=='guru' ){
 		
 		validasi_ada("guru","nip","$nip");
 		
-		gambar_upload(UPLOAD_DIR ,"$nip","guru");
+		gambar_upload(UPLOAD_DIR ,"$nip","guru"); //gambar_upload($lokasi, $id, $nama)
 		
 		//sql input database
 		  $input = mysql_query("INSERT INTO guru (

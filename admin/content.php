@@ -28,6 +28,21 @@ elseif($_GET['menu']=="admin" ){
 elseif($_GET['menu']=="kecamatan" ){
   	include "menu/menu_kecamatan.php";		
   }
+
+// Bagian Menu kelurahan
+elseif($_GET['menu']=="kelurahan" ){
+  	include "menu/menu_kelurahan.php";		
+  }
+  
+// Bagian Menu pengerajin
+elseif($_GET['menu']=="pengerajin" ){
+  	include "menu/menu_pengerajin.php";		
+  }
+  
+  // Bagian Menu kerajinan
+elseif($_GET['menu']=="kerajinan" ){
+  	include "menu/menu_kerajinan.php";		
+  }
   
 // Bagian Menu kategori
 elseif($_GET['menu']=="kategori" ){
