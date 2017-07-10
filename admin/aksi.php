@@ -34,6 +34,16 @@ if (isset($menu) AND $_GET['act']=='hapus'){
 		$hapus=mysql_query("DELETE FROM kelurahan WHERE kelurahan_id='$_GET[id]'");
   	}
         
+        //untuk menghapus data kerajinan
+	if($menu=="kelurahan"){
+		$hapus=mysql_query("DELETE FROM kerajinan WHERE kerajinan_id='$_GET[id]'");
+  	}
+        
+        //untuk menghapus data bukutamu
+	if($menu=="bukutamu"){
+		$hapus=mysql_query("DELETE FROM bukutamu WHERE bukutamu_id='$_GET[id]'");
+  	}
+        
         //untuk menghapus data kecamatan
 	elseif($menu=="kecamatan"){		
 		$ambil=mysql_query("SELECT * FROM kelurahan WHERE kelurahan_kecamatan_id='$_GET[id]'");
@@ -480,7 +490,7 @@ elseif ($menu=='pengerajin' ){
 																	//untuk edit tabel member
 	elseif($_GET['act']=="edit"){
 		if($kelurahan_nama!==$kelurahan_nama1){
-			validasi_ada("kelurahan","kelurahan_nama","$kelurahan_nama"); //validasi_ada($tabel,$validasi,$isi)
+			validasi_ada("pengerajin","kelurahan_nama","$kelurahan_nama"); //validasi_ada($tabel,$validasi,$isi)
 		}
                 
                 if (!empty($_FILES['myFile']['name'])) {
@@ -516,6 +526,112 @@ elseif ($menu=='pengerajin' ){
 	
 }												
 //end untuk menu pengerajin
+	   	                                                        //bagian kerajinan
+//untuk menu kerajinan
+elseif ($menu=='kerajinan' ){
+	//penulisan variabel2 yg dikirim
+	$kerajinan_id			= strip_tags($_POST['kerajinan_id']);
+	$kerajinan_kategori_id  	= strip_tags($_POST['kerajinan_kategori_id']);
+	$kerajinan_kelurahan_id		= strip_tags($_POST['kerajinan_kelurahan_id']);
+	$kerajinan_pengerajin_id        = strip_tags($_POST['kerajinan_pengerajin_id']);
+	$kerajinan_nama 		= strip_tags($_POST['kerajinan_nama']);
+	$kerajinan_nama1 		= strip_tags($_POST['kerajinan_nama1']);
+	$kerajinan_deskripsi		= strip_tags($_POST['kerajinan_deskripsi']);
+	$kerajinan_alamat		= strip_tags($_POST['kerajinan_alamat']);
+	
+        $ambilIdKecamatan=mysql_query("SELECT kelurahan_kecamatan_id FROM kelurahan WHERE kelurahan_id = '$kerajinan_kelurahan_id' LIMIT 1");
+        $tampilIdKecamatan=  mysql_fetch_array($ambilIdKecamatan);
+        $kecamatan_id = $tampilIdKecamatan['kelurahan_kecamatan_id'];
+	
+        define("UPLOAD_DIR", "../images/images_kerajinan/");
+																	//untuk insert tabel bank
+	//untuk insert tabel bank
+	if($_GET['act']=="tambah"){
+		
+		validasi_ada("kerajinan","kerajinan_nama","$kerajinan_nama"); //validasi_ada($tabel,$validasi,$isi)
+                
+                $menu_id = $menu.'_id';
+                $ambilId=mysql_query("SELECT $menu_id FROM $menu ORDER BY $menu_id DESC LIMIT 1");
+		$tampilId=  mysql_fetch_array($ambilId);
+                $id = $tampilId[$menu.'_id']+1;
+                
+                gambar_upload(UPLOAD_DIR ,"$id","kerajinan"); //gambar_upload($lokasi, $id, $nama)
+		//sql input database
+		  $input = mysql_query("INSERT INTO kerajinan (
+                                                            kerajinan_id,
+                                                            kerajinan_kategori_id,
+                                                            kerajinan_kelurahan_id,
+                                                            kerajinan_kecamatan_id,
+                                                            kerajinan_pengerajin_id,
+                                                            kerajinan_nama,
+                                                            kerajinan_deskripsi,
+                                                            kerajinan_foto,
+                                                            kerajinan_alamat)
+                                            VALUES (
+                                                            '$id',
+                                                            '$kerajinan_kategori_id',
+                                                            '$kerajinan_kelurahan_id',
+                                                            '$kecamatan_id',
+                                                            '$kerajinan_pengerajin_id',
+                                                            '$kerajinan_nama',
+                                                            '$kerajinan_deskripsi',
+                                                            'kerajinan_$id.jpg',
+                                                            'kerajinan_alamat'
+                                                            )");
+		if (! $input){
+			echo mysql_error();
+			echo "<script>alert('Penyimpanan Data gagal dilaksanakan. ')</script>";
+			echo "<script language=javascript>window.history.go(-1);</script>";
+		}
+		else{
+			echo "<script>alert('Penyimpanan Data berhasil dilaksanakan.')</script>";
+		}
+		
+		echo "<meta http-equiv='refresh'content='0;url=tampil.php?menu=$menu'>";
+	}
+																	//untuk edit tabel member
+	elseif($_GET['act']=="edit"){
+		if($kerajinan_nama!==$kerajinan_nama1){
+			validasi_ada("kerajinan","kerajinan_nama","$kerajinan_nama"); //validasi_ada($tabel,$validasi,$isi)
+		}
+                
+                if (!empty($_FILES['myFile']['name'])) {
+			gambar_upload(UPLOAD_DIR ,"$pengerajin_id","pengerajin");
+			$foto = "kerajinan_foto		='kerajinan_$kerajinan_id.jpg',";
+		}
+		else{
+			$foto = "";
+		}
+		
+                var_dump($_POST,$kerajinan_kategori_id,$kerajinan_kelurahan_id,$kecamatan_id,$kerajinan_pengerajin_id,$kerajinan_nama,
+                        $kerajinan_deskripsi,$foto,$kerajinan_alamat,$kerajinan_id);
+		$update = mysql_query("UPDATE kerajinan SET 
+                                                    kerajinan_kategori_id	='$kerajinan_kategori_id',
+                                                    kerajinan_kelurahan_id	='$kerajinan_kelurahan_id',
+                                                    kerajinan_kecamatan_id	='$kecamatan_id',
+                                                    kerajinan_pengerajin_id	='$kerajinan_pengerajin_id',
+                                                    kerajinan_nama		='$kerajinan_nama',
+                                                    kerajinan_deskripsi		='$kerajinan_deskripsi',
+                                                    $foto
+                                                    kerajinan_alamat		='$kerajinan_alamat'
+                                            WHERE kerajinan_id			='$kerajinan_id'");
+		
+    
+		
+		if (! $update){
+			echo mysql_error();
+			echo "<script>alert('Penyimpanan Data gagal dilaksanakan. ')</script>";
+			echo "<script language=javascript>window.history.go(-1);</script>";
+		}
+		else{
+			echo "<script>alert('Penyimpanan Data berhasil dilaksanakan. ')</script>";
+		}
+		echo "<meta http-equiv='refresh'content='0;url=tampil.php?menu=$menu'>";
+		
+	}
+	
+}												
+//end untuk menu kerajinan
 
 	   	                                                        //bagian guru
 //untuk menu guru

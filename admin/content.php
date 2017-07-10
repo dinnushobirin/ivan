@@ -48,6 +48,11 @@ elseif($_GET['menu']=="kerajinan" ){
 elseif($_GET['menu']=="kategori" ){
   	include "menu/menu_kategori.php";		
   }
+
+// Bagian Menu bukutamu
+elseif($_GET['menu']=="bukutamu" ){
+  	include "menu/menu_bukutamu.php";		
+  }
   
   // Bagian Menu siswa
 elseif($_GET['menu']=="siswa" ){
